@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Music 9 Timeline</title>
+
+<style>
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #111;
+    color: white;
+    overflow-x: hidden;
+}
+
+.header {
+    text-align: center;
+    padding: 40px 20px 20px;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.header p {
+    color: #cccccc;
+    max-width: 700px;
+    margin: auto;
+    line-height: 1.6;
+}
+
+.timeline-wrapper {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 40px 20px 60px;
+}
+
+.timeline {
+    display: flex;
+    gap: 40px;
+    min-width: max-content;
+    align-items: center;
+}
+
+.timeline-card {
+    position: relative;
+    width: 280px;
+    height: 360px;
+    border-radius: 18px;
+    overflow: hidden;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.timeline-card:hover {
+    transform: scale(1.04);
+}
+
+.timeline-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.2));
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+}
+
+.overlay h2 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.overlay p {
+    margin-top: 8px;
+    color: #dddddd;
+}
+
+/* Popup */
+
+.popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    padding: 20px;
+}
+
+.popup-content {
+    background: #1d1d1d;
+    max-width: 700px;
+    width: 100%;
+    border-radius: 18px;
+    overflow: hidden;
+    animation: fadeIn 0.3s ease;
+}
+
+.popup-content img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+}
+
+.popup-text {
+    padding: 30px;
+}
+
+.popup-text h2 {
+    margin-top: 0;
+    font-size: 2rem;
+}
+
+.popup-text h3 {
+    margin-bottom: 10px;
+    margin-top: 24px;
+}
+
+.popup-text ul {
+    padding-left: 20px;
+    line-height: 1.7;
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 2rem;
+    cursor: pointer;
+    color: white;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 700px) {
+
+.timeline-card {
+    width: 220px;
+    height: 300px;
+}
+
+.overlay h2 {
+    font-size: 1.6rem;
+}
+
+.popup-content img {
+    height: 220px;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Evolution of Rock & Pop</h1>
+    <p>
+        Explore a brief overview of major decades in rock and pop music history.
+        Click a decade to learn more.
+    </p>
+</div>
+
+<div class="timeline-wrapper">
+    <div class="timeline">
+
+        <!-- 1950s -->
+        <div class="timeline-card" onclick="openPopup('popup1950s')">
+            <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=1200&auto=format&fit=crop" alt="1950s">
+            <div class="overlay">
+                <h2>1950s</h2>
+                <p>Birth of Rock & Roll</p>
+            </div>
+        </div>
+
+        <!-- 1960s -->
+        <div class="timeline-card" onclick="openPopup('popup1960s')">
+            <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1200&auto=format&fit=crop" alt="1960s">
+            <div class="overlay">
+                <h2>1960s</h2>
+                <p>British Invasion & Psychedelia</p>
+            </div>
+        </div>
+
+        <!-- 1970s -->
+        <div class="timeline-card" onclick="openPopup('popup1970s')">
+            <img src="https://images.unsplash.com/photo-1501612780327-45045538702b?q=80&w=1200&auto=format&fit=crop" alt="1970s">
+            <div class="overlay">
+                <h2>1970s</h2>
+                <p>Arena Rock, Disco & Punk</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- POPUPS -->
+
+<div class="popup" id="popup1950s">
+    <div class="close-btn" onclick="closePopup('popup1950s')">&times;</div>
+
+    <div class="popup-content">
+        <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=1200&auto=format&fit=crop">
+
+        <div class="popup-text">
+            <h2>1950s — Birth of Rock & Roll</h2>
+
+            <p>
+                Rock and roll emerged from rhythm & blues, country, and gospel traditions.
+                Teen culture and radio helped spread the new sound across America.
+            </p>
+
+            <h3>Key Artists</h3>
+            <ul>
+                <li>Elvis Presley</li>
+                <li>Chuck Berry</li>
+                <li>Little Richard</li>
+            </ul>
+
+            <h3>Important Songs</h3>
+            <ul>
+                <li>"Johnny B. Goode"</li>
+                <li>"Hound Dog"</li>
+                <li>"Tutti Frutti"</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="popup" id="popup1960s">
+    <div class="close-btn" onclick="closePopup('popup1960s')">&times;</div>
+
+    <div class="popup-content">
+        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1200&auto=format&fit=crop">
+
+        <div class="popup-text">
+            <h2>1960s — British Invasion & Psychedelia</h2>
+
+            <p>
+                The 1960s saw rapid musical experimentation, social change, and the global rise of rock bands.
+            </p>
+
+            <h3>Key Artists</h3>
+            <ul>
+                <li>The Beatles</li>
+                <li>The Rolling Stones</li>
+                <li>Jimi Hendrix</li>
+            </ul>
+
+            <h3>Important Songs</h3>
+            <ul>
+                <li>"Hey Jude"</li>
+                <li>"Purple Haze"</li>
+                <li>"(I Can't Get No) Satisfaction"</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="popup" id="popup1970s">
+    <div class="close-btn" onclick="closePopup('popup1970s')">&times;</div>
+
+    <div class="popup-content">
+        <img src="https://images.unsplash.com/photo-1501612780327-45045538702b?q=80&w=1200&auto=format&fit=crop">
+
+        <div class="popup-text">
+            <h2>1970s — Arena Rock, Disco & Punk</h2>
+
+            <p>
+                Rock music expanded into many directions including stadium rock, disco dance culture, and punk rebellion.
+            </p>
+
+            <h3>Key Artists</h3>
+            <ul>
+                <li>Led Zeppelin</li>
+                <li>Fleetwood Mac</li>
+                <li>The Ramones</li>
+            </ul>
+
+            <h3>Important Songs</h3>
+            <ul>
+                <li>"Stairway to Heaven"</li>
+                <li>"Dreams"</li>
+                <li>"Blitzkrieg Bop"</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+
+function openPopup(id) {
+    document.getElementById(id).style.display = 'flex';
+}
+
+function closePopup(id) {
+    document.getElementById(id).style.display = 'none';
+}
+
+window.onclick = function(event) {
+    document.querySelectorAll('.popup').forEach(popup => {
+        if (event.target === popup) {
+            popup.style.display = 'none';
+        }
+    });
+}
+
+</script>
+
+</body>
+</html>
+```
+
+---
+
+## GitHub Pages Quick Setup
+
+1. Create a new repository on GitHub
+2. Upload the `index.html` file
+3. Go to:
+
+```text
+Settings → Pages
+```
+
+4. Under:
+
+```text
+Build and deployment
+```
+
+choose:
+
+```text
+Deploy from a branch
+```
+
+5. Select:
+
+```text
+main branch
+```
+
+6. Save
+
+GitHub will generate a public URL after a minute or two.
+
+---
+
+## Canvas Embed Example
+
+```html
+<iframe
+src="https://YOUR-USERNAME.github.io/YOUR-REPO-NAME/"
+width="100%"
+height="700"
+style="border:none; border-radius:12px;">
+</iframe>
+```
+
+---
+
+## Easy Things To Change Later
+
+* Replace images
+* Add decades
+* Add YouTube embeds
+* Add audio clips
+* Change colors/fonts
+* Add animations
+* Add more popups/events
+* Add artist influence lines
+
+This version is intentionally simple so you can test the workflow first.
