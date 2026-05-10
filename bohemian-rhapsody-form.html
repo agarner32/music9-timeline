@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: #ffffff;
@@ -16,256 +15,63 @@
       font-size: 15px;
       line-height: 1.6;
     }
-
-    a { color: #1D9E75; }
-
-    .header { margin-bottom: 1.25rem; }
-    .header h1 { font-size: 20px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
-    .header p { font-size: 13px; color: #666; line-height: 1.5; }
-
-    .info-box {
-      font-size: 13px;
-      color: #555;
-      background: #f7f7f5;
-      border-radius: 8px;
-      padding: 10px 14px;
-      margin-bottom: 1.25rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-    }
-    .info-box i { color: #999; font-size: 16px; margin-top: 1px; flex-shrink: 0; }
-
-    .instructions-box {
-      border-left: 3px solid #1D9E75;
-      padding: 12px 16px;
-      background: #f7f7f5;
-      border-radius: 0 8px 8px 0;
-      margin-bottom: 1.25rem;
-      font-size: 14px;
-      color: #555;
-      line-height: 1.6;
-    }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    .yt-hidden { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    .player-card { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid #e5e5e5; border-radius: 12px; background: #fff; margin-bottom: 1.25rem; }
+    .thumb { width: 52px; height: 52px; border-radius: 8px; overflow: hidden; flex-shrink: 0; background: #f0f0f0; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .song-info { flex: 1; min-width: 0; }
+    .song-title { font-size: 14px; font-weight: 600; color: #1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .song-artist { font-size: 12px; color: #666; margin-top: 1px; }
+    .progress-wrap { margin-top: 6px; }
+    .progress-bar-bg { height: 3px; background: #e5e5e5; border-radius: 2px; overflow: hidden; margin-bottom: 3px; }
+    .progress-bar-fill { height: 100%; background: #1D9E75; border-radius: 2px; width: 0%; transition: width 0.5s linear; }
+    .progress-times { display: flex; justify-content: space-between; font-size: 10px; color: #999; font-family: 'Courier New', monospace; }
+    .play-btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid #ccc; background: #fff; color: #1a1a1a; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; transition: background 0.15s; }
+    .play-btn:hover:not(:disabled) { background: #f7f7f5; }
+    .play-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .play-btn.playing { background: #E1F5EE; border-color: #0F6E56; color: #085041; }
+    .loading-note { font-size: 12px; color: #999; text-align: center; margin-bottom: 1rem; min-height: 18px; }
+    .instructions-box { border-left: 3px solid #1D9E75; padding: 10px 14px; background: #f7f7f5; border-radius: 0 8px 8px 0; margin-bottom: 1.25rem; font-size: 14px; color: #555; line-height: 1.6; }
     .instructions-box strong { color: #1a1a1a; font-weight: 600; }
-
-    .sync-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 1.25rem;
-      padding: 12px 16px;
-      border: 1px solid #e5e5e5;
-      border-radius: 8px;
-      background: #fff;
-    }
-    .sync-label { font-size: 13px; color: #555; flex: 1; }
-    .sync-label strong { font-size: 13px; color: #1a1a1a; display: block; margin-bottom: 2px; }
-
-    #sync-btn {
-      font-size: 13px;
-      font-weight: 600;
-      padding: 9px 18px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      background: #fff;
-      color: #1a1a1a;
-      cursor: pointer;
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.15s;
-    }
-    #sync-btn:hover:not(:disabled) { background: #f7f7f5; }
-    #sync-btn.synced { background: #E1F5EE; border-color: #0F6E56; color: #085041; }
-    #sync-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .timer {
-      font-size: 32px;
-      font-weight: 600;
-      color: #ccc;
-      text-align: center;
-      font-family: 'Courier New', monospace;
-      margin-bottom: 1rem;
-      letter-spacing: 3px;
-      transition: color 0.3s;
-    }
-    .timer.running { color: #1D9E75; }
-
-    #click-btn {
-      width: 100%;
-      font-size: 17px;
-      font-weight: 600;
-      padding: 20px 40px;
-      border-radius: 12px;
-      border: 1px solid #ccc;
-      background: #fff;
-      color: #1a1a1a;
-      cursor: pointer;
-      transition: transform 0.08s, background 0.12s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 1rem;
-    }
+    #click-btn { width: 100%; font-size: 17px; font-weight: 600; padding: 20px 40px; border-radius: 12px; border: 1px solid #ccc; background: #fff; color: #1a1a1a; cursor: pointer; transition: transform 0.08s, background 0.12s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 1rem; }
     #click-btn:hover:not(:disabled) { background: #f7f7f5; }
     #click-btn:active:not(:disabled) { transform: scale(0.98); }
     #click-btn:disabled { opacity: 0.3; cursor: not-allowed; }
     #click-btn.pulse { background: #E1F5EE; border-color: #0F6E56; }
-
-    .click-feed {
-      min-height: 32px;
-      margin-bottom: 1rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .click-chip {
-      font-size: 12px;
-      padding: 3px 10px;
-      border-radius: 20px;
-      background: #f7f7f5;
-      border: 1px solid #e5e5e5;
-      color: #666;
-    }
-
-    .controls {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 0.5rem;
-    }
-    .btn-ghost {
-      font-size: 13px;
-      padding: 8px 14px;
-      border-radius: 8px;
-      border: 1px solid #e5e5e5;
-      background: transparent;
-      color: #666;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .click-feed { min-height: 28px; margin-bottom: 1rem; display: flex; flex-wrap: wrap; gap: 6px; }
+    .click-chip { font-size: 12px; padding: 3px 10px; border-radius: 20px; background: #f7f7f5; border: 1px solid #e5e5e5; color: #666; }
+    .controls { display: flex; gap: 8px; margin-bottom: 0.5rem; }
+    .btn-ghost { font-size: 13px; padding: 8px 14px; border-radius: 8px; border: 1px solid #e5e5e5; background: transparent; color: #666; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     .btn-ghost:hover { background: #f7f7f5; }
-    .btn-show {
-      font-size: 13px;
-      font-weight: 600;
-      padding: 8px 22px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      background: #fff;
-      color: #1a1a1a;
-      cursor: pointer;
-      margin-left: auto;
-    }
+    .btn-show { font-size: 13px; font-weight: 600; padding: 8px 22px; border-radius: 8px; border: 1px solid #ccc; background: #fff; color: #1a1a1a; cursor: pointer; margin-left: auto; }
     .btn-show:hover { background: #f7f7f5; }
-
-    .status {
-      font-size: 12px;
-      color: #999;
-      text-align: center;
-      margin-bottom: 1.25rem;
-      min-height: 18px;
-    }
-
-    .results {
-      display: none;
-      border-top: 1px solid #e5e5e5;
-      padding-top: 1.25rem;
-      margin-top: 0.5rem;
-    }
+    .status { font-size: 12px; color: #999; text-align: center; margin-bottom: 1.25rem; min-height: 18px; }
+    .results { display: none; border-top: 1px solid #e5e5e5; padding-top: 1.25rem; margin-top: 0.5rem; }
     .results.show { display: block; }
-
     .result-headline { font-size: 18px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
     .result-sub { font-size: 13px; color: #555; margin-bottom: 1.25rem; line-height: 1.5; }
-
-    .score-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-bottom: 1.25rem;
-    }
-    .score-card {
-      background: #f7f7f5;
-      border-radius: 8px;
-      padding: 10px 8px;
-      text-align: center;
-    }
+    .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.25rem; }
+    .score-card { background: #f7f7f5; border-radius: 8px; padding: 10px 8px; text-align: center; }
     .score-n { font-size: 24px; font-weight: 700; }
     .score-n.green  { color: #0F6E56; }
     .score-n.amber  { color: #854F0B; }
     .score-n.red    { color: #A32D2D; }
     .score-n.purple { color: #534AB7; }
     .score-lbl { font-size: 11px; color: #999; margin-top: 2px; line-height: 1.3; }
-
-    .legend-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 1.25rem;
-    }
+    .legend-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 1.25rem; }
     .leg { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #666; }
     .leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-
     .tl-wrap { margin-bottom: 1.25rem; }
-    .tl-label-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 10px;
-      color: #999;
-      margin-bottom: 4px;
-    }
+    .tl-label-row { display: flex; justify-content: space-between; font-size: 10px; color: #999; margin-bottom: 4px; }
     .tl-outer { position: relative; height: 60px; }
-    .tl-track {
-      position: absolute;
-      top: 20px; left: 0; right: 0;
-      height: 8px;
-      background: #f0f0f0;
-      border-radius: 4px;
-    }
+    .tl-track { position: absolute; top: 20px; left: 0; right: 0; height: 8px; background: #f0f0f0; border-radius: 4px; }
     .tl-seg { position: absolute; top: 20px; height: 8px; }
-    .tl-correct-tick {
-      position: absolute;
-      top: 12px;
-      width: 2px;
-      height: 24px;
-      transform: translateX(-50%);
-    }
-    .tl-student-dot {
-      position: absolute;
-      top: 14px;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      transform: translateX(-50%);
-      border: 2px solid #fff;
-    }
-    .tl-seg-label {
-      position: absolute;
-      top: 34px;
-      font-size: 9px;
-      color: #999;
-      transform: translateX(-50%);
-      white-space: nowrap;
-    }
-
-    .section-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 1.25rem;
-    }
-    .s-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 9px 12px;
-      border-radius: 8px;
-      border: 1px solid #e5e5e5;
-      font-size: 13px;
-      flex-wrap: wrap;
-    }
+    .tl-correct-tick { position: absolute; top: 12px; width: 2px; height: 24px; transform: translateX(-50%); }
+    .tl-student-dot { position: absolute; top: 14px; width: 14px; height: 14px; border-radius: 50%; transform: translateX(-50%); border: 2px solid #fff; }
+    .tl-seg-label { position: absolute; top: 34px; font-size: 9px; color: #999; transform: translateX(-50%); white-space: nowrap; }
+    .section-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.25rem; }
+    .s-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; border: 1px solid #e5e5e5; font-size: 13px; flex-wrap: wrap; }
     .s-item.hit        { border-color: #0F6E56; background: #E1F5EE; }
     .s-item.close      { border-color: #854F0B; background: #FAEEDA; }
     .s-item.miss       { border-color: #A32D2D; background: #FCEBEB; }
@@ -273,78 +79,49 @@
     .s-item.bonus-miss { border-color: #e5e5e5; background: #f7f7f5; opacity: 0.75; }
     .s-icon  { font-size: 15px; flex-shrink: 0; }
     .s-name  { font-weight: 600; flex: 1; color: #1a1a1a; font-size: 13px; min-width: 80px; }
-    .s-bonus-badge {
-      font-size: 10px;
-      padding: 2px 7px;
-      border-radius: 20px;
-      background: #EEEDFE;
-      color: #534AB7;
-      border: 1px solid #AFA9EC;
-      flex-shrink: 0;
-    }
+    .s-bonus-badge { font-size: 10px; padding: 2px 7px; border-radius: 20px; background: #EEEDFE; color: #534AB7; border: 1px solid #AFA9EC; flex-shrink: 0; }
     .s-time   { font-size: 11px; color: #999; flex-shrink: 0; }
     .s-result { font-size: 11px; color: #555; flex-shrink: 0; text-align: right; }
-
-    .takeaway {
-      border-left: 3px solid #1D9E75;
-      padding: 12px 16px;
-      background: #f7f7f5;
-      border-radius: 0 8px 8px 0;
-      font-size: 13px;
-      color: #555;
-      line-height: 1.6;
-    }
+    .takeaway { border-left: 3px solid #1D9E75; padding: 12px 16px; background: #f7f7f5; border-radius: 0 8px 8px 0; font-size: 13px; color: #555; line-height: 1.6; }
     .takeaway strong { color: #1a1a1a; font-weight: 600; }
     .takeaway p { margin-bottom: 8px; }
     .takeaway p:last-child { margin-bottom: 0; }
-
-    .try-again {
-      margin-top: 1.25rem;
-      text-align: center;
-    }
-    .try-again button {
-      font-size: 14px;
-      font-weight: 600;
-      padding: 10px 28px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      background: #fff;
-      color: #1a1a1a;
-      cursor: pointer;
-    }
-    .try-again button:hover { background: #f7f7f5; }
+    .try-again { margin-top: 1.25rem; text-align: center; }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <h1>Bohemian Rhapsody — can you hear the sections?</h1>
-    <p>A no-stakes listening activity. No grade, no pressure — just your ears and one of the most unusual songs ever recorded.</p>
+  <h1 class="sr-only">Bohemian Rhapsody Form Identifier — a no-stakes listening activity to test your ear for musical sections.</h1>
+
+  <div class="yt-hidden" id="yt-container">
+    <div id="yt-player"></div>
   </div>
 
-  <div class="info-box">
-    <i class="ti ti-brand-youtube"></i>
-    <span>Open <a href="https://www.youtube.com/watch?v=fJ9rUzIMcZQ" target="_blank">Bohemian Rhapsody on YouTube</a> in a new tab and get it ready to play. Then click <strong>"I'm starting the song now"</strong> the moment you press play — that syncs your clicks to the music.</span>
-  </div>
-
-  <div class="instructions-box">
-    <strong>What to do:</strong> As you listen, click the big button every time you feel the music shift into something noticeably different. Go with your gut — there are no trick questions. When the song ends, click "Show my results" to see how your ear compares to the actual section map.
-  </div>
-
-  <div class="sync-row">
-    <div class="sync-label">
-      <strong>Step 1 — Sync your timing</strong>
-      Press play on YouTube, then immediately click this button.
+  <div class="player-card">
+    <div class="thumb">
+      <img src="https://img.youtube.com/vi/fJ9rUzIMcZQ/0.jpg" alt="Bohemian Rhapsody by Queen album thumbnail">
     </div>
-    <button id="sync-btn" onclick="startSync()">
-      <i class="ti ti-player-play"></i> I'm starting the song now
+    <div class="song-info">
+      <div class="song-title">Bohemian Rhapsody</div>
+      <div class="song-artist">Queen &middot; 1975</div>
+      <div class="progress-wrap">
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-fill"></div></div>
+        <div class="progress-times"><span id="prog-current">0:00</span><span>5:55</span></div>
+      </div>
+    </div>
+    <button class="play-btn" id="play-btn" onclick="togglePlay()" aria-label="Play Bohemian Rhapsody" disabled>
+      <i class="ti ti-player-play" aria-hidden="true"></i>
     </button>
   </div>
 
-  <div class="timer" id="timer">0:00</div>
+  <div class="loading-note" id="loading-note">Loading audio player — just a moment...</div>
+
+  <div class="instructions-box">
+    <strong>What to do:</strong> Press play above. Each time you feel the music shift into a noticeably different section, click the big button below. Go with your gut — there are no trick questions. When the song ends, click "Show my results."
+  </div>
 
   <button id="click-btn" onclick="recordClick()" disabled>
-    <i class="ti ti-music"></i>
+    <i class="ti ti-music" aria-hidden="true"></i>
     I hear a new section
   </button>
 
@@ -352,24 +129,22 @@
 
   <div class="controls">
     <button class="btn-ghost" onclick="resetAll()">
-      <i class="ti ti-refresh"></i> Start over
+      <i class="ti ti-refresh" aria-hidden="true"></i> Start over
     </button>
     <button class="btn-show" onclick="showResults()">Show my results</button>
   </div>
 
-  <div class="status" id="status">Click "I'm starting the song now" the moment you press play on YouTube.</div>
+  <div class="status" id="status"></div>
 
   <div class="results" id="results">
     <div class="result-headline" id="headline"></div>
     <div class="result-sub" id="result-sub"></div>
-
     <div class="score-grid">
       <div class="score-card"><div class="score-n green"  id="sc-hit">—</div><div class="score-lbl">Caught</div></div>
       <div class="score-card"><div class="score-n amber"  id="sc-close">—</div><div class="score-lbl">Close</div></div>
       <div class="score-card"><div class="score-n red"    id="sc-miss">—</div><div class="score-lbl">Missed</div></div>
       <div class="score-card"><div class="score-n purple" id="sc-bonus">—</div><div class="score-lbl">Bonus catch</div></div>
     </div>
-
     <div class="legend-row">
       <div class="leg"><div class="leg-dot" style="background:#1D9E75"></div> Caught (within 6s)</div>
       <div class="leg"><div class="leg-dot" style="background:#EF9F27"></div> Close (within 10s)</div>
@@ -377,7 +152,6 @@
       <div class="leg"><div class="leg-dot" style="background:#7F77DD"></div> Bonus section</div>
       <div class="leg"><div class="leg-dot" style="background:#aaa"></div> Your clicks</div>
     </div>
-
     <div class="tl-wrap">
       <div class="tl-label-row">
         <span>0:00</span><span>1:00</span><span>2:00</span>
@@ -385,19 +159,19 @@
       </div>
       <div class="tl-outer" id="timeline"><div class="tl-track"></div></div>
     </div>
-
     <div class="section-list" id="section-list"></div>
-
     <div class="takeaway" id="takeaway"></div>
-
     <div class="try-again">
-      <button onclick="resetAll()"><i class="ti ti-refresh"></i> Try it again</button>
+      <button class="btn-ghost" onclick="resetAll()">
+        <i class="ti ti-refresh" aria-hidden="true"></i> Try it again
+      </button>
     </div>
   </div>
 
   <script>
     const DURATION = 355;
     const HIT = 6, CLOSE = 10;
+    const VIDEO_ID = 'fJ9rUzIMcZQ';
 
     const SECTIONS = [
       { name: 'Introduction', time: 0,   color: '#B5D4F4', bonus: false },
@@ -418,65 +192,94 @@
     const SCORED = SECTIONS.filter(s => !s.bonus && s.time > 0);
     const BONUS  = SECTIONS.filter(s => s.bonus);
 
-    let clicks = [], synced = false, startTime = 0, timerInterval = null;
+    let clicks = [], isPlaying = false, startTime = 0, elapsed = 0;
+    let progressInterval = null, player = null, playerReady = false;
 
     function fmt(s) {
       s = Math.max(0, Math.round(s));
       return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
     }
 
-    function startSync() {
-      synced = true;
-      startTime = Date.now();
-      clicks = [];
-      document.getElementById('click-feed').innerHTML = '';
-      document.getElementById('results').classList.remove('show');
-      document.getElementById('section-list').innerHTML = '';
+    function initYT() {
+      if (typeof YT === 'undefined' || !YT.Player) { setTimeout(initYT, 300); return; }
+      player = new YT.Player('yt-player', {
+        height: '1', width: '1',
+        videoId: VIDEO_ID,
+        playerVars: { autoplay: 0, controls: 0, rel: 0, modestbranding: 1 },
+        events: {
+          onReady: () => {
+            playerReady = true;
+            document.getElementById('play-btn').disabled = false;
+            document.getElementById('loading-note').textContent = 'Ready — press play to begin.';
+          },
+          onStateChange: e => {
+            if (e.data === YT.PlayerState.PLAYING) { onPlay(); }
+            if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) { onPause(); }
+          }
+        }
+      });
+    }
 
-      const btn = document.getElementById('sync-btn');
-      btn.classList.add('synced');
-      btn.innerHTML = '<i class="ti ti-check"></i> Synced — now listen!';
-      btn.disabled = true;
-
+    function onPlay() {
+      isPlaying = true;
       document.getElementById('click-btn').disabled = false;
-      document.getElementById('status').textContent = 'Timer running — click each time you hear a new section!';
+      document.getElementById('loading-note').textContent = '';
+      const btn = document.getElementById('play-btn');
+      btn.classList.add('playing');
+      btn.innerHTML = '<i class="ti ti-player-pause" aria-hidden="true"></i>';
+      btn.setAttribute('aria-label', 'Pause');
+      document.getElementById('status').textContent = 'Listening — click the button each time you hear a new section!';
+      startTime = Date.now() - (elapsed * 1000);
+      clearInterval(progressInterval);
+      progressInterval = setInterval(updateProgress, 500);
+    }
 
-      timerInterval = setInterval(() => {
-        const elapsed = (Date.now() - startTime) / 1000;
-        document.getElementById('timer').textContent = fmt(elapsed);
-        document.getElementById('timer').className = 'timer running';
-        if (elapsed >= DURATION + 5) clearInterval(timerInterval);
-      }, 250);
+    function onPause() {
+      isPlaying = false;
+      elapsed = (Date.now() - startTime) / 1000;
+      clearInterval(progressInterval);
+      const btn = document.getElementById('play-btn');
+      btn.classList.remove('playing');
+      btn.innerHTML = '<i class="ti ti-player-play" aria-hidden="true"></i>';
+      btn.setAttribute('aria-label', 'Play');
+      document.getElementById('status').textContent = elapsed < DURATION
+        ? 'Paused — press play to continue.'
+        : 'Song ended — click "Show my results" when you\'re ready.';
+    }
+
+    function updateProgress() {
+      const now = (Date.now() - startTime) / 1000;
+      const pct = Math.min((now / DURATION) * 100, 100);
+      document.getElementById('prog-fill').style.width = pct + '%';
+      document.getElementById('prog-current').textContent = fmt(now);
+    }
+
+    function togglePlay() {
+      if (!playerReady) return;
+      isPlaying ? player.pauseVideo() : player.playVideo();
     }
 
     function recordClick() {
-      if (!synced) return;
+      if (!isPlaying) return;
       const t = (Date.now() - startTime) / 1000;
       clicks.push(t);
-
       const btn = document.getElementById('click-btn');
       btn.classList.add('pulse');
       setTimeout(() => btn.classList.remove('pulse'), 250);
-
-      const feed = document.getElementById('click-feed');
       const chip = document.createElement('div');
       chip.className = 'click-chip';
       chip.textContent = fmt(t);
-      feed.appendChild(chip);
-
+      document.getElementById('click-feed').appendChild(chip);
       document.getElementById('status').textContent =
         clicks.length + ' click' + (clicks.length !== 1 ? 's' : '') + ' recorded — keep listening!';
     }
 
     function showResults() {
-      if (!synced || clicks.length === 0) {
-        document.getElementById('status').textContent = 'Start the song and make some clicks first!';
-        return;
-      }
-      clearInterval(timerInterval);
+      if (clicks.length === 0) { document.getElementById('status').textContent = 'Press play and make some clicks first!'; return; }
+      if (playerReady) player.pauseVideo();
+      clearInterval(progressInterval);
 
       const matched = new Set();
-
       function bestClick(targetTime) {
         let best = null, bestDiff = Infinity;
         clicks.forEach((c, i) => {
@@ -515,19 +318,10 @@
 
       const score = hits + closes * 0.5;
       let headline, sub;
-      if (score >= total * 0.85) {
-        headline = 'Excellent ear!';
-        sub = 'You caught most of the major section changes. Trained listeners notice these transitions naturally — and now you\'re one of them.';
-      } else if (score >= total * 0.5) {
-        headline = 'Good listening!';
-        sub = 'You caught some sections clearly. The ones you missed are worth a second listen — knowing where to listen makes all the difference.';
-      } else if (score >= 1) {
-        headline = 'Nice start!';
-        sub = 'The more you listen, the more you hear. Try it again now that you know where the sections are — you\'ll be surprised how obvious they sound the second time.';
-      } else {
-        headline = 'Give it another go!';
-        sub = 'No worries — this song takes careful listening. Look at the section map below, then try again. Second attempts are almost always dramatically better.';
-      }
+      if (score >= total * 0.85)     { headline = 'Excellent ear!';      sub = 'You caught most of the major section changes. Trained listeners notice these transitions naturally — and now you\'re one of them.'; }
+      else if (score >= total * 0.5) { headline = 'Good listening!';     sub = 'You caught some sections clearly. The ones you missed are worth a second listen — knowing where to listen makes all the difference.'; }
+      else if (score >= 1)           { headline = 'Nice start!';         sub = 'The more you listen, the more you hear. Try it again now that you know where the sections are — you\'ll be surprised how obvious they sound the second time.'; }
+      else                           { headline = 'Give it another go!'; sub = 'No worries — this song takes careful listening. Check the section map below, then try again.'; }
       if (bonus > 0) sub += ' And great ear catching that subtle instrumental section — most listeners miss it entirely.';
 
       document.getElementById('headline').textContent = headline;
@@ -535,27 +329,21 @@
 
       const tl = document.getElementById('timeline');
       const track = tl.querySelector('.tl-track');
-      tl.innerHTML = '';
-      tl.appendChild(track);
+      tl.innerHTML = ''; tl.appendChild(track);
 
       SECTIONS.forEach((sec, i) => {
-        const next = SECTIONS[i + 1];
-        const end  = next ? next.time : DURATION;
-        const left = (sec.time / DURATION) * 100;
-        const w    = ((end - sec.time) / DURATION) * 100;
-
+        const next = SECTIONS[i + 1], end = next ? next.time : DURATION;
+        const left = (sec.time / DURATION) * 100, w = ((end - sec.time) / DURATION) * 100;
         const seg = document.createElement('div');
         seg.className = 'tl-seg';
         seg.style.cssText = `left:${left}%;width:${w}%;background:${sec.color};opacity:${sec.bonus ? '0.5' : '0.8'}`;
         tl.appendChild(seg);
-
         if (sec.time > 0) {
           const tick = document.createElement('div');
           tick.className = 'tl-correct-tick';
           tick.style.cssText = `left:${left}%;background:${sec.bonus ? '#7F77DD' : '#1D9E75'}`;
           tl.appendChild(tick);
         }
-
         const lbl = document.createElement('div');
         lbl.className = 'tl-seg-label';
         lbl.style.left = (left + w / 2) + '%';
@@ -568,45 +356,32 @@
         const dot = document.createElement('div');
         dot.className = 'tl-student-dot';
         dot.style.left = pct + '%';
-        const isBonus  = bonusResults.some(b => b.caught && b.student && b.student.idx === idx);
-        const scored   = scoredResults.find(s => s.student && s.student.idx === idx);
-        if (isBonus)                       dot.style.background = '#7F77DD';
-        else if (scored?.status === 'hit')   dot.style.background = '#1D9E75';
-        else if (scored?.status === 'close') dot.style.background = '#EF9F27';
-        else                                 dot.style.background = '#aaa';
+        const isBonus = bonusResults.some(b => b.caught && b.student && b.student.idx === idx);
+        const scored  = scoredResults.find(s => s.student && s.student.idx === idx);
+        dot.style.background = isBonus ? '#7F77DD' : scored?.status === 'hit' ? '#1D9E75' : scored?.status === 'close' ? '#EF9F27' : '#aaa';
         tl.appendChild(dot);
       });
 
       const list = document.getElementById('section-list');
       list.innerHTML = '';
-
       [...scoredResults, ...bonusResults].sort((a, b) => a.time - b.time).forEach(s => {
         const item = document.createElement('div');
         const isBonus = s.bonus !== undefined && s.bonus;
         let cls, iconName, resultText;
-
         if (isBonus) {
           cls = s.caught ? 'bonus-hit' : 'bonus-miss';
           iconName = 'ti-star';
-          resultText = s.caught
-            ? 'Bonus caught! Great ear — this one is subtle.'
-            : 'Optional — most listeners miss this one.';
+          resultText = s.caught ? 'Bonus caught! Great ear — this one is subtle.' : 'Optional — most listeners miss this one.';
         } else {
           cls = s.status;
           iconName = s.status === 'hit' ? 'ti-check' : s.status === 'close' ? 'ti-minus' : 'ti-x';
-          if (s.status === 'hit')
-            resultText = 'Caught it! (' + (s.student.time < s.time
-              ? s.student.diff.toFixed(1) + 's early'
-              : s.student.diff.toFixed(1) + 's late') + ')';
-          else if (s.status === 'close')
-            resultText = 'Close — you clicked at ' + fmt(s.student.time) + ' (' + s.student.diff.toFixed(1) + 's off)';
-          else
-            resultText = 'Missed — listen for this at ' + fmt(s.time);
+          if (s.status === 'hit')        resultText = 'Caught it! (' + (s.student.time < s.time ? s.student.diff.toFixed(1) + 's early' : s.student.diff.toFixed(1) + 's late') + ')';
+          else if (s.status === 'close') resultText = 'Close — clicked at ' + fmt(s.student.time) + ' (' + s.student.diff.toFixed(1) + 's off)';
+          else                           resultText = 'Missed — listen for this at ' + fmt(s.time);
         }
-
         item.className = 's-item ' + cls;
         item.innerHTML =
-          `<i class="ti ${iconName} s-icon"></i>` +
+          `<i class="ti ${iconName} s-icon" aria-hidden="true"></i>` +
           `<span class="s-name">${s.name}</span>` +
           (isBonus ? '<span class="s-bonus-badge">bonus</span>' : '') +
           `<span class="s-time">${fmt(s.time)}</span>` +
@@ -614,30 +389,33 @@
         list.appendChild(item);
       });
 
-      document.getElementById('takeaway').innerHTML =
-        TAKEAWAYS.map(t => `<p>${t}</p>`).join('');
-
+      document.getElementById('takeaway').innerHTML = TAKEAWAYS.map(t => `<p>${t}</p>`).join('');
       document.getElementById('results').classList.add('show');
       document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function resetAll() {
-      synced = false;
-      clicks = [];
-      clearInterval(timerInterval);
-      document.getElementById('timer').textContent = '0:00';
-      document.getElementById('timer').className = 'timer';
+      clicks = []; isPlaying = false; elapsed = 0;
+      clearInterval(progressInterval);
+      if (playerReady) player.stopVideo();
+      document.getElementById('prog-fill').style.width = '0%';
+      document.getElementById('prog-current').textContent = '0:00';
       document.getElementById('click-feed').innerHTML = '';
-      document.getElementById('status').textContent = 'Click "I\'m starting the song now" the moment you press play on YouTube.';
+      document.getElementById('status').textContent = '';
+      document.getElementById('loading-note').textContent = 'Ready — press play to begin.';
       document.getElementById('results').classList.remove('show');
       document.getElementById('section-list').innerHTML = '';
-
-      const btn = document.getElementById('sync-btn');
-      btn.classList.remove('synced');
-      btn.disabled = false;
-      btn.innerHTML = '<i class="ti ti-player-play"></i> I\'m starting the song now';
+      const btn = document.getElementById('play-btn');
+      btn.classList.remove('playing');
+      btn.innerHTML = '<i class="ti ti-player-play" aria-hidden="true"></i>';
+      btn.setAttribute('aria-label', 'Play Bohemian Rhapsody');
       document.getElementById('click-btn').disabled = true;
     }
+
+    window.onYouTubeIframeAPIReady = initYT;
+    const ytTag = document.createElement('script');
+    ytTag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(ytTag);
   </script>
 
 </body>
