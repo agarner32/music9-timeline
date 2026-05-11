@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listening Guide — Scrubbing Audio Player</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #ffffff;
+      color: #1a1a1a;
+      padding: 1.25rem;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+    /* ══ CHANGE THESE FOR EACH SONG ════════════════════════════════════════
+       AUDIO_SRC  — direct URL to your MP3 file
+       THUMB_SRC  — URL to thumbnail image (YouTube thumbnail or your own)
+       SONG_TITLE — title shown at top
+       SONG_INFO  — artist · year shown below title
+    ═══════════════════════════════════════════════════════════════════════ */
+
+    /* ── Song header ── */
+    .song-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid #e5e5e5; }
+    .thumb { width: 52px; height: 52px; border-radius: 8px; overflow: hidden; flex-shrink: 0; background: #f0f0f0; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .song-info .song-title { font-size: 16px; font-weight: 600; color: #1a1a1a; }
+    .song-info .song-sub { font-size: 13px; color: #666; margin-top: 2px; }
+    .song-badge { display: inline-block; margin-top: 4px; font-size: 11px; padding: 2px 8px; border-radius: 20px; background: #f7f7f5; color: #999; border: 1px solid #e5e5e5; }
+
+    /* ── Audio player ── */
+    .player {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px;
+      border: 1px solid #e5e5e5; border-radius: 12px;
+      background: #fff; margin-bottom: 0.75rem;
+    }
+    .play-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1px solid #ccc; background: #fff; color: #1a1a1a;
+      cursor: pointer; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; transition: background 0.15s;
+    }
+    .play-btn:hover:not(:disabled) { background: #f7f7f5; }
+    .play-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .play-btn.playing { background: #E1F5EE; border-color: #0F6E56; color: #085041; }
+
+    .player-middle { flex: 1; min-width: 0; }
+    .section-now { font-size: 11px; font-weight: 600; color: #1D9E75; margin-bottom: 5px; min-height: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Scrub bar */
+    .scrub-wrap { position: relative; height: 20px; display: flex; align-items: center; cursor: pointer; user-select: none; }
+    .scrub-track { position: absolute; left: 0; right: 0; height: 4px; background: #e5e5e5; border-radius: 2px; }
+    .scrub-fill { height: 100%; background: #1D9E75; border-radius: 2px; width: 0%; pointer-events: none; }
+    .scrub-handle {
+      position: absolute; top: 50%;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #1D9E75; border: 2px solid #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      transform: translate(-50%, -50%);
+      pointer-events: none; left: 0%;
+      transition: width 0.1s, height 0.1s;
+    }
+    .scrub-wrap:hover .scrub-handle { width: 16px; height: 16px; }
+
+    .player-times { display: flex; justify-content: space-between; font-size: 10px; color: #999; font-family: 'Courier New', monospace; margin-top: 4px; }
+
+    /* Volume */
+    .vol-wrap { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .vol-icon { font-size: 14px; color: #aaa; }
+    .vol-slider { width: 60px; accent-color: #1D9E75; cursor: pointer; }
+
+    /* ── Loading note ── */
+    .loading-note { font-size: 12px; color: #999; text-align: center; margin-bottom: 1rem; min-height: 16px; }
+
+    /* ── Instructions ── */
+    .instructions-box { border-left: 3px solid #1D9E75; padding: 10px 14px; background: #f7f7f5; border-radius: 0 8px 8px 0; margin-bottom: 1.25rem; font-size: 13px; color: #555; line-height: 1.6; }
+    .instructions-box strong { color: #1a1a1a; font-weight: 600; }
+
+    /* ── Annotation cards ── */
+    .annotations { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+
+    .ann-card { border-radius: 10px; border: 1px solid #e5e5e5; background: #fff; overflow: hidden; transition: all 0.35s ease; opacity: 0.38; }
+    .ann-card.past   { opacity: 0.55; background: #f7f7f5; }
+    .ann-card.active { opacity: 1; border-color: #1D9E75; box-shadow: 0 2px 10px rgba(29,158,117,0.12); }
+    .ann-card.future { opacity: 0.38; }
+
+    .ann-main { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; }
+    .ann-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; border: 2px solid #ddd; background: #f0f0f0; transition: all 0.3s; }
+    .ann-card.active .ann-dot { background: #1D9E75; border-color: #0F6E56; box-shadow: 0 0 0 3px rgba(29,158,117,0.2); }
+    .ann-card.past .ann-dot   { background: #aaa; border-color: #aaa; }
+
+    .ann-body { flex: 1; }
+    .ann-top { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+    .ann-name { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+    .ann-card.active .ann-name { color: #085041; }
+
+    /* Clickable timestamp badge */
+    .ann-ts {
+      font-size: 11px; color: #999; font-family: 'Courier New', monospace;
+      background: #f7f7f5; padding: 1px 7px; border-radius: 4px;
+      border: 1px solid #e5e5e5; cursor: pointer; transition: all 0.15s;
+    }
+    .ann-ts:hover { background: #E1F5EE; color: #085041; border-color: #9FD9C5; }
+    .ann-card.active .ann-ts { background: rgba(29,158,117,0.1); color: #085041; border-color: #9FD9C5; }
+
+    .ann-desc { font-size: 13px; color: #555; line-height: 1.55; }
+
+    /* Listen for box */
+    .ann-listen-box { margin: 0 14px 12px 34px; padding: 8px 10px; border-radius: 6px; background: #f7f7f5; border: 1px solid #e5e5e5; border-left: 3px solid #ddd; transition: all 0.35s; }
+    .ann-card.active .ann-listen-box { background: #E1F5EE; border-color: #9FD9C5; border-left-color: #1D9E75; }
+    .ann-listen-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #aaa; margin-bottom: 3px; display: flex; align-items: center; gap: 4px; }
+    .ann-card.active .ann-listen-label { color: #0F6E56; }
+    .ann-listen-text { font-size: 12px; color: #666; line-height: 1.5; font-style: italic; }
+    .ann-card.active .ann-listen-text { color: #178a65; }
+
+    /* ── Footer ── */
+    .jump-hint { font-size: 11px; color: #aaa; text-align: center; margin-bottom: 1rem; font-style: italic; }
+    .status { font-size: 12px; color: #999; text-align: center; min-height: 18px; margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+
+  <h1 class="sr-only">Listening Guide with scrubbing audio player. Annotations highlight automatically as the music plays.</h1>
+
+  <!-- ══ SWAP THIS URL FOR YOUR OWN HOSTED AUDIO FILE WHEN READY ══════════
+       Current: Mozart Magic Flute Overture (public domain — for testing only)
+       Replace: https://aarongarner.com/music-9/audio/your-file.mp3
+  ════════════════════════════════════════════════════════════════════════ -->
+  <audio id="audio" preload="metadata" crossorigin="anonymous">
+    <source src="https://archive.org/download/classical-music-mix-by-various-artists/01%20-%20Mozart%20-%20Overture%20The%20Magic%20Flute.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <div class="song-header">
+    <div class="thumb">
+      <!-- Replace with your own thumbnail image URL if desired -->
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Queen_band_logo.svg/240px-Queen_band_logo.svg.png"
+           alt="Song thumbnail"
+           onerror="this.style.display='none'">
+    </div>
+    <div class="song-info">
+      <!-- ══ CHANGE SONG TITLE AND INFO HERE ══ -->
+      <div class="song-title">TEST — Mozart: Overture to The Magic Flute</div>
+      <div class="song-sub">W.A. Mozart &middot; Public domain test file</div>
+      <span class="song-badge">Scrub to any section — annotations follow instantly</span>
+    </div>
+  </div>
+
+  <div class="player">
+    <button class="play-btn" id="play-btn" onclick="togglePlay()" aria-label="Play" disabled>
+      <i class="ti ti-player-play" aria-hidden="true"></i>
+    </button>
+    <div class="player-middle">
+      <div class="section-now" id="section-now">Loading audio...</div>
+      <div class="scrub-wrap" id="scrub-wrap"
+           onmousedown="startScrub(event)"
+           ontouchstart="startScrubTouch(event)">
+        <div class="scrub-track">
+          <div class="scrub-fill" id="scrub-fill"></div>
+        </div>
+        <div class="scrub-handle" id="scrub-handle"></div>
+      </div>
+      <div class="player-times">
+        <span id="time-current">0:00</span>
+        <span id="time-total">0:00</span>
+      </div>
+    </div>
+    <div class="vol-wrap">
+      <i class="ti ti-volume vol-icon" aria-hidden="true"></i>
+      <input type="range" class="vol-slider" id="vol-slider" min="0" max="1" step="0.05" value="1"
+             oninput="setVolume(this.value)" aria-label="Volume control">
+    </div>
+  </div>
+
+  <div class="loading-note" id="loading-note">Loading audio — just a moment...</div>
+
+  <div class="instructions-box">
+    <strong>How to use this guide:</strong> Press play and the annotations below will highlight automatically as each section arrives. Drag the progress bar to scrub to any point — the guide jumps instantly to match. Click any <strong>timestamp badge</strong> to jump directly to that section.
+  </div>
+
+  <div class="annotations" id="annotations"></div>
+
+  <div class="jump-hint">💡 Tip — click any timestamp badge to jump directly to that section</div>
+  <div class="status" id="status"></div>
+
+  <script>
+    // ══ CHANGE ANNOTATIONS FOR EACH SONG ═══════════════════════════════════
+    // Each item needs:
+    //   name:   section label shown to students
+    //   time:   start time in SECONDS from beginning of audio
+    //   desc:   what is happening musically (2-3 sentences)
+    //   listen: what to specifically listen for (1-2 sentences, italic)
+    //
+    // NOTE: These are placeholder annotations for the Mozart test file.
+    // Replace with your actual song annotations when you swap in real audio.
+    // ════════════════════════════════════════════════════════════════════════
+    const ANNOTATIONS = [
+      {
+        name: 'Opening — Slow Introduction',
+        time: 0,
+        desc: 'Three dramatic chords in unison — the entire orchestra together. This is a musical "attention please" that was a common convention in 18th century opera overtures.',
+        listen: 'Notice how all the instruments play exactly together. This kind of unified opening was designed to quiet a noisy theater audience.'
+      },
+      {
+        name: 'Fugue Subject Enters',
+        time: 18,
+        desc: 'The fast section begins and a single melodic idea is passed between instrument groups — this is a fugue, one of the most sophisticated compositional techniques in classical music.',
+        listen: 'Try to follow the main melody as it jumps from strings to winds and back. It is the same tune, just passed around like a conversation.'
+      },
+      {
+        name: 'Development — Building Energy',
+        time: 80,
+        desc: 'Mozart takes the opening melody and develops it — stretching, combining, and varying it to build tension and momentum toward the conclusion.',
+        listen: 'Notice how the dynamic level (volume) rises and falls in waves. Mozart is controlling your anticipation deliberately.'
+      },
+      {
+        name: 'Return and Conclusion',
+        time: 160,
+        desc: 'The overture races toward its close with the full orchestra at full volume — a triumphant ending designed to get the audience excited for the opera to follow.',
+        listen: 'Listen for the final chords — short, emphatic, and in unison just like the opening. The circle closes.'
+      }
+    ];
+
+    // ════════════════════════════════════════════════════════════════════════
+    // DO NOT CHANGE ANYTHING BELOW THIS LINE
+    // ════════════════════════════════════════════════════════════════════════
+
+    const audio = document.getElementById('audio');
+    let duration = 0, scrubbing = false, currentIdx = -1;
+
+    function fmt(s) {
+      s = Math.max(0, Math.round(s));
+      return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+    }
+
+    function buildAnnotations() {
+      const container = document.getElementById('annotations');
+      ANNOTATIONS.forEach((ann, i) => {
+        const card = document.createElement('div');
+        card.className = 'ann-card future';
+        card.id = 'ann-' + i;
+        card.innerHTML =
+          `<div class="ann-main">` +
+            `<div class="ann-dot"></div>` +
+            `<div class="ann-body">` +
+              `<div class="ann-top">` +
+                `<span class="ann-name">${ann.name}</span>` +
+                `<span class="ann-ts" onclick="jumpTo(${ann.time})" title="Click to jump to this section">${fmt(ann.time)}</span>` +
+              `</div>` +
+              `<div class="ann-desc">${ann.desc}</div>` +
+            `</div>` +
+          `</div>` +
+          `<div class="ann-listen-box">` +
+            `<div class="ann-listen-label"><i class="ti ti-ear" aria-hidden="true"></i> Listen for</div>` +
+            `<div class="ann-listen-text">${ann.listen}</div>` +
+          `</div>`;
+        container.appendChild(card);
+      });
+    }
+
+    function updateAnnotations(t) {
+      let activeIdx = -1;
+      for (let i = ANNOTATIONS.length - 1; i >= 0; i--) {
+        if (t >= ANNOTATIONS[i].time) { activeIdx = i; break; }
+      }
+      if (activeIdx === currentIdx) return;
+      currentIdx = activeIdx;
+      ANNOTATIONS.forEach((_, i) => {
+        const card = document.getElementById('ann-' + i);
+        if (i < activeIdx)        card.className = 'ann-card past';
+        else if (i === activeIdx) card.className = 'ann-card active';
+        else                      card.className = 'ann-card future';
+      });
+      if (activeIdx >= 0) {
+        document.getElementById('section-now').textContent = '▶ ' + ANNOTATIONS[activeIdx].name;
+        document.getElementById('ann-' + activeIdx).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        document.getElementById('section-now').textContent = 'Press play to begin';
+      }
+    }
+
+    function updateProgress(t) {
+      const pct = duration > 0 ? Math.min((t / duration) * 100, 100) : 0;
+      document.getElementById('scrub-fill').style.width = pct + '%';
+      document.getElementById('scrub-handle').style.left = pct + '%';
+      document.getElementById('time-current').textContent = fmt(t);
+    }
+
+    function togglePlay() {
+      audio.paused ? audio.play() : audio.pause();
+    }
+
+    function setVolume(v) { audio.volume = parseFloat(v); }
+
+    function jumpTo(t) {
+      audio.currentTime = t;
+      updateProgress(t);
+      updateAnnotations(t);
+      if (audio.paused) audio.play();
+    }
+
+    // ── Mouse scrubbing ──────────────────────────────────────────────────
+    function getPct(clientX) {
+      const rect = document.getElementById('scrub-wrap').getBoundingClientRect();
+      return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    }
+
+    function startScrub(e) {
+      e.preventDefault();
+      scrubbing = true;
+      applyPct(getPct(e.clientX));
+      document.addEventListener('mousemove', onScrubMove);
+      document.addEventListener('mouseup', onScrubEnd);
+    }
+    function onScrubMove(e) {
+      if (!scrubbing) return;
+      applyPct(getPct(e.clientX));
+    }
+    function onScrubEnd(e) {
+      if (!scrubbing) return;
+      scrubbing = false;
+      audio.currentTime = getPct(e.clientX) * duration;
+      document.removeEventListener('mousemove', onScrubMove);
+      document.removeEventListener('mouseup', onScrubEnd);
+    }
+
+    // ── Touch scrubbing ──────────────────────────────────────────────────
+    function startScrubTouch(e) {
+      scrubbing = true;
+      applyPct(getPct(e.touches[0].clientX));
+      document.addEventListener('touchmove', onScrubTouchMove, { passive: false });
+      document.addEventListener('touchend', onScrubTouchEnd);
+    }
+    function onScrubTouchMove(e) {
+      e.preventDefault();
+      if (!scrubbing) return;
+      applyPct(getPct(e.touches[0].clientX));
+    }
+    function onScrubTouchEnd(e) {
+      if (!scrubbing) return;
+      scrubbing = false;
+      audio.currentTime = getPct(e.changedTouches[0].clientX) * duration;
+      document.removeEventListener('touchmove', onScrubTouchMove);
+      document.removeEventListener('touchend', onScrubTouchEnd);
+    }
+
+    function applyPct(pct) {
+      const t = pct * duration;
+      updateProgress(t);
+      updateAnnotations(t);
+    }
+
+    // ── Audio events ─────────────────────────────────────────────────────
+    audio.addEventListener('loadedmetadata', () => {
+      duration = audio.duration;
+      document.getElementById('time-total').textContent = fmt(duration);
+      document.getElementById('loading-note').textContent = 'Ready — press play to begin.';
+      document.getElementById('play-btn').disabled = false;
+      document.getElementById('section-now').textContent = 'Press play to begin';
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      if (scrubbing) return;
+      updateProgress(audio.currentTime);
+      updateAnnotations(audio.currentTime);
+    });
+
+    audio.addEventListener('play', () => {
+      const btn = document.getElementById('play-btn');
+      btn.classList.add('playing');
+      btn.innerHTML = '<i class="ti ti-player-pause" aria-hidden="true"></i>';
+      btn.setAttribute('aria-label', 'Pause');
+      document.getElementById('loading-note').textContent = '';
+      document.getElementById('status').textContent = '';
+    });
+
+    audio.addEventListener('pause', () => {
+      const btn = document.getElementById('play-btn');
+      btn.classList.remove('playing');
+      btn.innerHTML = '<i class="ti ti-player-play" aria-hidden="true"></i>';
+      btn.setAttribute('aria-label', 'Play');
+      if (audio.currentTime < duration - 1) {
+        document.getElementById('status').textContent = 'Paused — press play to continue.';
+      }
+    });
+
+    audio.addEventListener('ended', () => {
+      document.getElementById('section-now').textContent = 'Song ended';
+      document.getElementById('status').textContent = 'Scrub back to re-listen to any section, or click any timestamp badge above.';
+      const btn = document.getElementById('play-btn');
+      btn.classList.remove('playing');
+      btn.innerHTML = '<i class="ti ti-player-play" aria-hidden="true"></i>';
+      btn.setAttribute('aria-label', 'Play');
+    });
+
+    audio.addEventListener('error', () => {
+      document.getElementById('loading-note').textContent = 'Audio could not load. Check the file URL in the source code.';
+      document.getElementById('section-now').textContent = 'Audio error';
+    });
+
+    buildAnnotations();
+  </script>
+
+</body>
+</html>
