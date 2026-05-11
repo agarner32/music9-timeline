@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bohemian Rhapsody — Listening Guide</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #ffffff;
+      color: #1a1a1a;
+      padding: 1.25rem;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+    /* ── Song header ── */
+    .song-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid #e5e5e5; }
+    .thumb { width: 52px; height: 52px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .song-info .song-title { font-size: 16px; font-weight: 600; color: #1a1a1a; }
+    .song-info .song-artist { font-size: 13px; color: #666; margin-top: 2px; }
+    .song-badge { display: inline-block; margin-top: 4px; font-size: 11px; padding: 2px 8px; border-radius: 20px; background: #f7f7f5; color: #999; border: 1px solid #e5e5e5; }
+
+    /* ── Instructions ── */
+    .instructions-box { border-left: 3px solid #1D9E75; padding: 10px 14px; background: #f7f7f5; border-radius: 0 8px 8px 0; margin-bottom: 1.25rem; font-size: 14px; color: #555; line-height: 1.6; }
+    .instructions-box strong { color: #1a1a1a; font-weight: 600; }
+
+    /* ── Sync button ── */
+    .sync-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; padding: 12px 16px; border: 1px solid #e5e5e5; border-radius: 10px; background: #fff; }
+    .sync-label { font-size: 13px; color: #555; flex: 1; line-height: 1.5; }
+    .sync-label strong { color: #1a1a1a; display: block; margin-bottom: 2px; }
+    #sync-btn { font-size: 13px; font-weight: 600; padding: 10px 20px; border-radius: 8px; border: 1px solid #1D9E75; background: #1D9E75; color: #fff; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px; transition: background 0.15s; }
+    #sync-btn:hover { background: #178a65; }
+    #sync-btn.synced { background: #f7f7f5; border-color: #e5e5e5; color: #666; }
+    #sync-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── Progress bar ── */
+    .progress-wrap { margin-bottom: 1.25rem; }
+    .progress-bar-bg { height: 6px; background: #f0f0f0; border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+    .progress-bar-fill { height: 100%; background: #1D9E75; border-radius: 3px; width: 0%; transition: width 0.5s linear; }
+    .progress-times { display: flex; justify-content: space-between; font-size: 11px; color: #999; font-family: 'Courier New', monospace; }
+
+    /* ── Annotation cards ── */
+    .annotations { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.25rem; }
+
+    .ann-card {
+      border-radius: 10px;
+      border: 1px solid #e5e5e5;
+      background: #fff;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      opacity: 0.4;
+    }
+    .ann-card.past  { opacity: 0.55; background: #f7f7f5; }
+    .ann-card.active { opacity: 1; border-color: #1D9E75; background: #fff; box-shadow: 0 2px 10px rgba(29,158,117,0.12); }
+    .ann-card.future { opacity: 0.4; }
+
+    .ann-main { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; }
+
+    .ann-indicator { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; border: 2px solid #ddd; background: #f0f0f0; transition: all 0.3s; }
+    .ann-card.active .ann-indicator { background: #1D9E75; border-color: #0F6E56; box-shadow: 0 0 0 3px rgba(29,158,117,0.2); }
+    .ann-card.past .ann-indicator { background: #aaa; border-color: #aaa; }
+
+    .ann-content { flex: 1; }
+    .ann-top { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
+    .ann-section { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+    .ann-card.active .ann-section { color: #085041; }
+    .ann-time { font-size: 11px; color: #999; font-family: 'Courier New', monospace; background: #f7f7f5; padding: 1px 6px; border-radius: 4px; border: 1px solid #e5e5e5; }
+    .ann-card.active .ann-time { background: rgba(29,158,117,0.1); color: #085041; border-color: #9FD9C5; }
+    .ann-desc { font-size: 13px; color: #555; line-height: 1.55; }
+
+    /* ── Listen for box ── */
+    .ann-listen-box {
+      margin: 0 14px 12px 34px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      background: #f7f7f5;
+      border: 1px solid #e5e5e5;
+      border-left: 3px solid #ddd;
+      transition: all 0.4s;
+    }
+    .ann-card.active .ann-listen-box {
+      background: #E1F5EE;
+      border-color: #9FD9C5;
+      border-left-color: #1D9E75;
+    }
+    .ann-listen-label {
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      color: #aaa; margin-bottom: 3px;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .ann-card.active .ann-listen-label { color: #0F6E56; }
+    .ann-listen-text { font-size: 12px; color: #666; line-height: 1.5; font-style: italic; }
+    .ann-card.active .ann-listen-text { color: #178a65; }
+
+    /* ── Status + reset ── */
+    .status { font-size: 12px; color: #999; text-align: center; margin-bottom: 1rem; min-height: 18px; }
+    .reset-row { text-align: center; }
+    .btn-ghost { font-size: 13px; padding: 8px 16px; border-radius: 8px; border: 1px solid #e5e5e5; background: transparent; color: #666; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-ghost:hover { background: #f7f7f5; }
+  </style>
+</head>
+<body>
+
+  <h1 class="sr-only">Bohemian Rhapsody Listening Guide — annotations appear automatically as the song plays.</h1>
+
+  <div class="song-header">
+    <div class="thumb">
+      <img src="https://img.youtube.com/vi/fJ9rUzIMcZQ/0.jpg" alt="Bohemian Rhapsody by Queen">
+    </div>
+    <div class="song-info">
+      <div class="song-title">Bohemian Rhapsody — Listening Guide</div>
+      <div class="song-artist">Queen &middot; 1975</div>
+      <span class="song-badge">Annotations appear automatically as you listen</span>
+    </div>
+  </div>
+
+  <div class="instructions-box">
+    <strong>How to use this guide:</strong> Press play on the video above, then immediately click "I pressed play" below. Each section will highlight automatically as it arrives — read the description and the <strong>Listen for</strong> tip while the music plays. No clicking required after that.
+  </div>
+
+  <div class="sync-row">
+    <div class="sync-label">
+      <strong>Sync your guide</strong>
+      Press play on the video above, then click this button immediately.
+    </div>
+    <button id="sync-btn" onclick="startSync()">
+      <i class="ti ti-player-play"></i> I pressed play
+    </button>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-fill"></div></div>
+    <div class="progress-times"><span id="prog-current">0:00</span><span>5:55</span></div>
+  </div>
+
+  <div class="annotations" id="annotations"></div>
+
+  <div class="status" id="status">Press play on the video above, then click "I pressed play" to sync the guide.</div>
+
+  <div class="reset-row">
+    <button class="btn-ghost" onclick="resetAll()">
+      <i class="ti ti-refresh"></i> Start over
+    </button>
+  </div>
+
+  <script>
+    const DURATION = 355;
+
+    // ── CHANGE THESE FOR EACH NEW SONG ──────────────────────────────────────
+    // Each annotation needs:
+    //   name:   section label shown to students
+    //   time:   when it starts in SECONDS from the beginning
+    //   desc:   what is happening musically (2-3 sentences)
+    //   listen: what to specifically listen for (1-2 sentences, italic)
+    // ────────────────────────────────────────────────────────────────────────
+    const ANNOTATIONS = [
+      {
+        name: 'Introduction',
+        time: 0,
+        desc: 'Solo piano and voice — just Freddie Mercury, completely exposed. No drums, no guitar, no full band.',
+        listen: 'Notice how intimate and vulnerable this feels. Queen is making you lean in before they overwhelm you.'
+      },
+      {
+        name: 'Verse 1',
+        time: 50,
+        desc: '"Mama, just killed a man…" The ballad begins in earnest. Freddie tells a story simply and directly.',
+        listen: 'Listen for the gentle piano accompaniment and how restrained the performance is — the drama is entirely in the lyrics.'
+      },
+      {
+        name: 'Verse 2',
+        time: 117,
+        desc: '"Too late, my time has come…" Same musical structure as Verse 1, but the emotional stakes escalate.',
+        listen: 'Hear the harmonies beginning to build underneath. The band is slowly waking up around Freddie\'s voice.'
+      },
+      {
+        name: 'Operatic Section',
+        time: 184,
+        desc: '"Galileo, Galileo!" The most theatrical moment in rock history. Multiple overdubbed Freddies create a full vocal choir.',
+        listen: 'There is no choir — it is all Freddie Mercury. Queen recorded this by having him sing each part dozens of times and layering the tape.'
+      },
+      {
+        name: 'Hard Rock',
+        time: 249,
+        desc: '"So you think you can stone me and spit in my eye!" The song explodes into full band hard rock.',
+        listen: 'Feel the contrast with everything that came before. Brian May\'s guitar is at maximum intensity. This section lasts less than a minute — but it hits like a freight train.'
+      },
+      {
+        name: 'Instrumental',
+        time: 297,
+        desc: 'A brief wind-down. The hard rock energy fades and the song takes a breath before its final statement.',
+        listen: 'Notice how Queen uses silence and space here to reset the emotional temperature after the chaos.'
+      },
+      {
+        name: 'Coda',
+        time: 314,
+        desc: '"Nothing really matters…" The quiet piano returns. The circle closes — we end where we began.',
+        listen: 'Compare this to the Introduction. Same instrument, same intimacy — but everything has changed. Listen for the gong strike at the very end.'
+      }
+    ];
+
+    let synced = false, startTime = 0;
+    let progressInterval = null, annotationInterval = null;
+    let currentIdx = -1;
+
+    function fmt(s) {
+      s = Math.max(0, Math.round(s));
+      return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+    }
+
+    function buildAnnotations() {
+      const container = document.getElementById('annotations');
+      container.innerHTML = '';
+      ANNOTATIONS.forEach((ann, i) => {
+        const card = document.createElement('div');
+        card.className = 'ann-card future';
+        card.id = 'ann-' + i;
+        card.innerHTML =
+          `<div class="ann-main">` +
+            `<div class="ann-indicator"></div>` +
+            `<div class="ann-content">` +
+              `<div class="ann-top">` +
+                `<span class="ann-section">${ann.name}</span>` +
+                `<span class="ann-time">${fmt(ann.time)}</span>` +
+              `</div>` +
+              `<div class="ann-desc">${ann.desc}</div>` +
+            `</div>` +
+          `</div>` +
+          `<div class="ann-listen-box">` +
+            `<div class="ann-listen-label"><i class="ti ti-ear"></i> Listen for</div>` +
+            `<div class="ann-listen-text">${ann.listen}</div>` +
+          `</div>`;
+        container.appendChild(card);
+      });
+    }
+
+    function updateAnnotations(elapsed) {
+      let activeIdx = -1;
+      for (let i = ANNOTATIONS.length - 1; i >= 0; i--) {
+        if (elapsed >= ANNOTATIONS[i].time) { activeIdx = i; break; }
+      }
+      if (activeIdx === currentIdx) return;
+      currentIdx = activeIdx;
+      ANNOTATIONS.forEach((_, i) => {
+        const card = document.getElementById('ann-' + i);
+        if (i < activeIdx)        card.className = 'ann-card past';
+        else if (i === activeIdx) card.className = 'ann-card active';
+        else                      card.className = 'ann-card future';
+      });
+      if (activeIdx >= 0) {
+        document.getElementById('ann-' + activeIdx).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        document.getElementById('status').textContent =
+          '▶ Now playing: ' + ANNOTATIONS[activeIdx].name + ' — ' + fmt(ANNOTATIONS[activeIdx].time);
+      }
+    }
+
+    function startSync() {
+      synced = true;
+      startTime = Date.now();
+      currentIdx = -1;
+
+      const btn = document.getElementById('sync-btn');
+      btn.classList.add('synced');
+      btn.innerHTML = '<i class="ti ti-check"></i> Guide synced!';
+      btn.disabled = true;
+
+      document.getElementById('status').textContent = 'Guide is running — sections will highlight as they arrive.';
+      ANNOTATIONS.forEach((_, i) => { document.getElementById('ann-' + i).className = 'ann-card future'; });
+
+      clearInterval(progressInterval);
+      clearInterval(annotationInterval);
+
+      progressInterval = setInterval(() => {
+        const elapsed = (Date.now() - startTime) / 1000;
+        const pct = Math.min((elapsed / DURATION) * 100, 100);
+        document.getElementById('prog-fill').style.width = pct + '%';
+        document.getElementById('prog-current').textContent = fmt(elapsed);
+        if (elapsed >= DURATION + 2) {
+          clearInterval(progressInterval);
+          clearInterval(annotationInterval);
+          document.getElementById('status').textContent = 'Song ended — scroll up to read any annotations you missed.';
+        }
+      }, 500);
+
+      annotationInterval = setInterval(() => {
+        const elapsed = (Date.now() - startTime) / 1000;
+        updateAnnotations(elapsed);
+      }, 250);
+    }
+
+    function resetAll() {
+      synced = false; currentIdx = -1;
+      clearInterval(progressInterval); clearInterval(annotationInterval);
+      document.getElementById('prog-fill').style.width = '0%';
+      document.getElementById('prog-current').textContent = '0:00';
+      document.getElementById('status').textContent = 'Press play on the video above, then click "I pressed play" to sync the guide.';
+      const btn = document.getElementById('sync-btn');
+      btn.classList.remove('synced'); btn.disabled = false;
+      btn.innerHTML = '<i class="ti ti-player-play"></i> I pressed play';
+      ANNOTATIONS.forEach((_, i) => { document.getElementById('ann-' + i).className = 'ann-card future'; });
+    }
+
+    buildAnnotations();
+  </script>
+
+</body>
+</html>
