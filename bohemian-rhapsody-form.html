@@ -17,6 +17,7 @@
     }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 
+    /* ── Song header ── */
     .song-header {
       display: flex;
       align-items: center;
@@ -25,16 +26,18 @@
       padding-bottom: 1.25rem;
       border-bottom: 1px solid #e5e5e5;
     }
-    .thumb {
-      width: 52px; height: 52px;
-      border-radius: 8px;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
+    .thumb { width: 52px; height: 52px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
     .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .song-info .song-title { font-size: 16px; font-weight: 600; color: #1a1a1a; }
     .song-info .song-artist { font-size: 13px; color: #666; margin-top: 2px; }
+    .song-info .song-badge {
+      display: inline-block; margin-top: 4px;
+      font-size: 11px; padding: 2px 8px;
+      border-radius: 20px; background: #E1F5EE;
+      color: #085041; border: 1px solid #0F6E56;
+    }
 
+    /* ── Instructions ── */
     .instructions-box {
       border-left: 3px solid #1D9E75;
       padding: 10px 14px;
@@ -47,6 +50,17 @@
     }
     .instructions-box strong { color: #1a1a1a; font-weight: 600; }
 
+    .steps { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+    .step { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #555; }
+    .step-num {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: #1D9E75; color: #fff;
+      font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+
+    /* ── Sync button ── */
     .sync-row {
       display: flex;
       align-items: center;
@@ -61,59 +75,64 @@
     .sync-label strong { color: #1a1a1a; display: block; margin-bottom: 2px; }
     #sync-btn {
       font-size: 13px; font-weight: 600;
-      padding: 9px 18px; border-radius: 8px;
-      border: 1px solid #ccc; background: #fff; color: #1a1a1a;
+      padding: 10px 20px; border-radius: 8px;
+      border: 1px solid #1D9E75; background: #1D9E75; color: #fff;
       cursor: pointer; white-space: nowrap;
       display: flex; align-items: center; gap: 6px;
       transition: background 0.15s;
     }
-    #sync-btn:hover { background: #f7f7f5; }
+    #sync-btn:hover { background: #178a65; }
     #sync-btn.synced { background: #E1F5EE; border-color: #0F6E56; color: #085041; }
     #sync-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+    /* ── Timer ── */
     .timer {
-      font-size: 32px; font-weight: 600;
+      font-size: 36px; font-weight: 600;
       color: #ddd; text-align: center;
       font-family: 'Courier New', monospace;
       margin-bottom: 1rem;
-      letter-spacing: 3px;
+      letter-spacing: 4px;
       transition: color 0.3s;
     }
     .timer.running { color: #1D9E75; }
 
+    /* ── Click button ── */
     #click-btn {
-      width: 100%; font-size: 17px; font-weight: 600;
-      padding: 20px 40px; border-radius: 12px;
-      border: 1px solid #ccc; background: #fff; color: #1a1a1a;
+      width: 100%; font-size: 18px; font-weight: 600;
+      padding: 22px 40px; border-radius: 14px;
+      border: 2px solid #ccc; background: #fff; color: #1a1a1a;
       cursor: pointer;
       transition: transform 0.08s, background 0.12s, border-color 0.12s;
       display: flex; align-items: center; justify-content: center; gap: 10px;
       margin-bottom: 1rem;
     }
-    #click-btn:hover:not(:disabled) { background: #f7f7f5; }
+    #click-btn:hover:not(:disabled) { background: #f7f7f5; border-color: #aaa; }
     #click-btn:active:not(:disabled) { transform: scale(0.98); }
-    #click-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    #click-btn:disabled { opacity: 0.25; cursor: not-allowed; }
     #click-btn.pulse { background: #E1F5EE; border-color: #0F6E56; }
 
+    /* ── Click feed ── */
     .click-feed { min-height: 28px; margin-bottom: 1rem; display: flex; flex-wrap: wrap; gap: 6px; }
     .click-chip { font-size: 12px; padding: 3px 10px; border-radius: 20px; background: #f7f7f5; border: 1px solid #e5e5e5; color: #666; }
 
+    /* ── Controls ── */
     .controls { display: flex; gap: 8px; margin-bottom: 0.5rem; }
     .btn-ghost { font-size: 13px; padding: 8px 14px; border-radius: 8px; border: 1px solid #e5e5e5; background: transparent; color: #666; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     .btn-ghost:hover { background: #f7f7f5; }
-    .btn-show { font-size: 13px; font-weight: 600; padding: 8px 22px; border-radius: 8px; border: 1px solid #ccc; background: #fff; color: #1a1a1a; cursor: pointer; margin-left: auto; }
-    .btn-show:hover { background: #f7f7f5; }
+    .btn-show { font-size: 13px; font-weight: 600; padding: 8px 22px; border-radius: 8px; border: 1px solid #1D9E75; background: #fff; color: #1D9E75; cursor: pointer; margin-left: auto; }
+    .btn-show:hover { background: #E1F5EE; }
 
     .status { font-size: 12px; color: #999; text-align: center; margin-bottom: 1.25rem; min-height: 18px; }
 
+    /* ── Results ── */
     .results { display: none; border-top: 1px solid #e5e5e5; padding-top: 1.25rem; margin-top: 0.5rem; }
     .results.show { display: block; }
-    .result-headline { font-size: 18px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+    .result-headline { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
     .result-sub { font-size: 13px; color: #555; margin-bottom: 1.25rem; line-height: 1.5; }
 
     .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.25rem; }
-    .score-card { background: #f7f7f5; border-radius: 8px; padding: 10px 8px; text-align: center; }
-    .score-n { font-size: 24px; font-weight: 700; }
+    .score-card { background: #f7f7f5; border-radius: 8px; padding: 12px 8px; text-align: center; }
+    .score-n { font-size: 26px; font-weight: 700; }
     .score-n.green  { color: #0F6E56; }
     .score-n.amber  { color: #854F0B; }
     .score-n.red    { color: #A32D2D; }
@@ -155,7 +174,7 @@
 </head>
 <body>
 
-  <h1 class="sr-only">Bohemian Rhapsody Form Identifier — a no-stakes listening activity.</h1>
+  <h1 class="sr-only">Bohemian Rhapsody Form Identifier — a no-stakes listening activity to train your ear for musical sections.</h1>
 
   <div class="song-header">
     <div class="thumb">
@@ -163,18 +182,25 @@
     </div>
     <div class="song-info">
       <div class="song-title">Bohemian Rhapsody — Form Identifier</div>
-      <div class="song-artist">Queen &middot; 1975 &middot; No-stakes listening activity</div>
+      <div class="song-artist">Queen &middot; 1975</div>
+      <span class="song-badge">No-stakes listening activity</span>
     </div>
   </div>
 
   <div class="instructions-box">
-    <strong>What to do:</strong> Press play on the video above. The moment you click play, click the sync button below — that locks your timer to the music. Then click the big button every time you feel the music shift into a noticeably different section. Go with your gut. When the song ends, click "Show my results."
+    <strong>Can you hear when the music changes?</strong> This song has more distinct sections than almost any other pop song ever recorded. Your job is to click a button every time you feel the music shift into something new.
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><span>Press play on the video above.</span></div>
+      <div class="step"><div class="step-num">2</div><span>Immediately click <strong>"I pressed play"</strong> below to start your timer.</span></div>
+      <div class="step"><div class="step-num">3</div><span>Click <strong>"I hear a new section"</strong> every time the music shifts.</span></div>
+      <div class="step"><div class="step-num">4</div><span>When the song ends, click <strong>"Show my results."</strong></span></div>
+    </div>
   </div>
 
   <div class="sync-row">
     <div class="sync-label">
-      <strong>Step 1 — Sync your timer</strong>
-      Press play on the video above, then immediately click this button.
+      <strong>Step 2 — Sync your timer</strong>
+      Press play on the video above first, then click this button immediately.
     </div>
     <button id="sync-btn" onclick="startSync()">
       <i class="ti ti-player-play" aria-hidden="true"></i> I pressed play
@@ -197,7 +223,7 @@
     <button class="btn-show" onclick="showResults()">Show my results</button>
   </div>
 
-  <div class="status" id="status">Press play on the video above, then click "I pressed play" to sync your timer.</div>
+  <div class="status" id="status">Press play on the video above, then click "I pressed play" to start your timer.</div>
 
   <div class="results" id="results">
     <div class="result-headline" id="headline"></div>
@@ -276,11 +302,11 @@
 
       const btn = document.getElementById('sync-btn');
       btn.classList.add('synced');
-      btn.innerHTML = '<i class="ti ti-check" aria-hidden="true"></i> Synced!';
+      btn.innerHTML = '<i class="ti ti-check" aria-hidden="true"></i> Timer running!';
       btn.disabled = true;
 
       document.getElementById('click-btn').disabled = false;
-      document.getElementById('status').textContent = 'Timer running — click the button each time you hear a new section!';
+      document.getElementById('status').textContent = 'Timer running — click "I hear a new section" each time the music shifts!';
 
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
@@ -352,8 +378,8 @@
 
       const score = hits + closes * 0.5;
       let headline, sub;
-      if (score >= total * 0.85)     { headline = 'Excellent ear!';      sub = 'You caught most of the major section changes. Trained listeners notice these transitions naturally — and now you\'re one of them.'; }
-      else if (score >= total * 0.5) { headline = 'Good listening!';     sub = 'You caught some sections clearly. The ones you missed are worth a second listen — knowing where to listen makes all the difference.'; }
+      if (score >= total * 0.85)     { headline = 'Excellent ear! 🎧';   sub = 'You caught most of the major section changes. Trained listeners notice these transitions naturally — and now you\'re one of them.'; }
+      else if (score >= total * 0.5) { headline = 'Good listening!';     sub = 'You caught several sections clearly. The ones you missed are worth a second listen — knowing where to listen makes all the difference.'; }
       else if (score >= 1)           { headline = 'Nice start!';         sub = 'The more you listen, the more you hear. Try it again now that you know where the sections are — you\'ll be surprised how obvious they sound the second time.'; }
       else                           { headline = 'Give it another go!'; sub = 'No worries — this song takes careful listening. Check the section map below, then try again. Second attempts are almost always dramatically better.'; }
       if (bonus > 0) sub += ' And great ear catching that subtle instrumental section — most listeners miss it entirely.';
@@ -409,9 +435,12 @@
         } else {
           cls = s.status;
           iconName = s.status === 'hit' ? 'ti-check' : s.status === 'close' ? 'ti-minus' : 'ti-x';
-          if (s.status === 'hit')        resultText = 'Caught it! (' + (s.student.time < s.time ? s.student.diff.toFixed(1) + 's early' : s.student.diff.toFixed(1) + 's late') + ')';
-          else if (s.status === 'close') resultText = 'Close — clicked at ' + fmt(s.student.time) + ' (' + s.student.diff.toFixed(1) + 's off)';
-          else                           resultText = 'Missed — listen for this at ' + fmt(s.time);
+          if (s.status === 'hit')
+            resultText = 'Caught it! (' + (s.student.time < s.time ? s.student.diff.toFixed(1) + 's early' : s.student.diff.toFixed(1) + 's late') + ')';
+          else if (s.status === 'close')
+            resultText = 'Close — clicked at ' + fmt(s.student.time) + ' (' + s.student.diff.toFixed(1) + 's off)';
+          else
+            resultText = 'Missed — listen for this at ' + fmt(s.time);
         }
         item.className = 's-item ' + cls;
         item.innerHTML =
@@ -434,7 +463,7 @@
       document.getElementById('timer').textContent = '0:00';
       document.getElementById('timer').className = 'timer';
       document.getElementById('click-feed').innerHTML = '';
-      document.getElementById('status').textContent = 'Press play on the video above, then click "I pressed play" to sync your timer.';
+      document.getElementById('status').textContent = 'Press play on the video above, then click "I pressed play" to start your timer.';
       document.getElementById('results').classList.remove('show');
       document.getElementById('section-list').innerHTML = '';
       const btn = document.getElementById('sync-btn');
