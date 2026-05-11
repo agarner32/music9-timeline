@@ -16,41 +16,101 @@
       line-height: 1.6;
     }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
-    .yt-hidden { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
-    .player-card { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid #e5e5e5; border-radius: 12px; background: #fff; margin-bottom: 1.25rem; }
-    .thumb { width: 52px; height: 52px; border-radius: 8px; overflow: hidden; flex-shrink: 0; background: #f0f0f0; }
+
+    .song-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid #e5e5e5;
+    }
+    .thumb {
+      width: 52px; height: 52px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
     .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .song-info { flex: 1; min-width: 0; }
-    .song-title { font-size: 14px; font-weight: 600; color: #1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .song-artist { font-size: 12px; color: #666; margin-top: 1px; }
-    .progress-wrap { margin-top: 6px; }
-    .progress-bar-bg { height: 3px; background: #e5e5e5; border-radius: 2px; overflow: hidden; margin-bottom: 3px; }
-    .progress-bar-fill { height: 100%; background: #1D9E75; border-radius: 2px; width: 0%; transition: width 0.5s linear; }
-    .progress-times { display: flex; justify-content: space-between; font-size: 10px; color: #999; font-family: 'Courier New', monospace; }
-    .play-btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid #ccc; background: #fff; color: #1a1a1a; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; transition: background 0.15s; }
-    .play-btn:hover:not(:disabled) { background: #f7f7f5; }
-    .play-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .play-btn.playing { background: #E1F5EE; border-color: #0F6E56; color: #085041; }
-    .loading-note { font-size: 12px; color: #999; text-align: center; margin-bottom: 1rem; min-height: 18px; }
-    .instructions-box { border-left: 3px solid #1D9E75; padding: 10px 14px; background: #f7f7f5; border-radius: 0 8px 8px 0; margin-bottom: 1.25rem; font-size: 14px; color: #555; line-height: 1.6; }
+    .song-info .song-title { font-size: 16px; font-weight: 600; color: #1a1a1a; }
+    .song-info .song-artist { font-size: 13px; color: #666; margin-top: 2px; }
+
+    .instructions-box {
+      border-left: 3px solid #1D9E75;
+      padding: 10px 14px;
+      background: #f7f7f5;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.25rem;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
     .instructions-box strong { color: #1a1a1a; font-weight: 600; }
-    #click-btn { width: 100%; font-size: 17px; font-weight: 600; padding: 20px 40px; border-radius: 12px; border: 1px solid #ccc; background: #fff; color: #1a1a1a; cursor: pointer; transition: transform 0.08s, background 0.12s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 1rem; }
+
+    .sync-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.25rem;
+      padding: 12px 16px;
+      border: 1px solid #e5e5e5;
+      border-radius: 10px;
+      background: #fff;
+    }
+    .sync-label { font-size: 13px; color: #555; flex: 1; line-height: 1.5; }
+    .sync-label strong { color: #1a1a1a; display: block; margin-bottom: 2px; }
+    #sync-btn {
+      font-size: 13px; font-weight: 600;
+      padding: 9px 18px; border-radius: 8px;
+      border: 1px solid #ccc; background: #fff; color: #1a1a1a;
+      cursor: pointer; white-space: nowrap;
+      display: flex; align-items: center; gap: 6px;
+      transition: background 0.15s;
+    }
+    #sync-btn:hover { background: #f7f7f5; }
+    #sync-btn.synced { background: #E1F5EE; border-color: #0F6E56; color: #085041; }
+    #sync-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .timer {
+      font-size: 32px; font-weight: 600;
+      color: #ddd; text-align: center;
+      font-family: 'Courier New', monospace;
+      margin-bottom: 1rem;
+      letter-spacing: 3px;
+      transition: color 0.3s;
+    }
+    .timer.running { color: #1D9E75; }
+
+    #click-btn {
+      width: 100%; font-size: 17px; font-weight: 600;
+      padding: 20px 40px; border-radius: 12px;
+      border: 1px solid #ccc; background: #fff; color: #1a1a1a;
+      cursor: pointer;
+      transition: transform 0.08s, background 0.12s, border-color 0.12s;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      margin-bottom: 1rem;
+    }
     #click-btn:hover:not(:disabled) { background: #f7f7f5; }
     #click-btn:active:not(:disabled) { transform: scale(0.98); }
     #click-btn:disabled { opacity: 0.3; cursor: not-allowed; }
     #click-btn.pulse { background: #E1F5EE; border-color: #0F6E56; }
+
     .click-feed { min-height: 28px; margin-bottom: 1rem; display: flex; flex-wrap: wrap; gap: 6px; }
     .click-chip { font-size: 12px; padding: 3px 10px; border-radius: 20px; background: #f7f7f5; border: 1px solid #e5e5e5; color: #666; }
+
     .controls { display: flex; gap: 8px; margin-bottom: 0.5rem; }
     .btn-ghost { font-size: 13px; padding: 8px 14px; border-radius: 8px; border: 1px solid #e5e5e5; background: transparent; color: #666; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     .btn-ghost:hover { background: #f7f7f5; }
     .btn-show { font-size: 13px; font-weight: 600; padding: 8px 22px; border-radius: 8px; border: 1px solid #ccc; background: #fff; color: #1a1a1a; cursor: pointer; margin-left: auto; }
     .btn-show:hover { background: #f7f7f5; }
+
     .status { font-size: 12px; color: #999; text-align: center; margin-bottom: 1.25rem; min-height: 18px; }
+
     .results { display: none; border-top: 1px solid #e5e5e5; padding-top: 1.25rem; margin-top: 0.5rem; }
     .results.show { display: block; }
     .result-headline { font-size: 18px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
     .result-sub { font-size: 13px; color: #555; margin-bottom: 1.25rem; line-height: 1.5; }
+
     .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.25rem; }
     .score-card { background: #f7f7f5; border-radius: 8px; padding: 10px 8px; text-align: center; }
     .score-n { font-size: 24px; font-weight: 700; }
@@ -59,9 +119,11 @@
     .score-n.red    { color: #A32D2D; }
     .score-n.purple { color: #534AB7; }
     .score-lbl { font-size: 11px; color: #999; margin-top: 2px; line-height: 1.3; }
+
     .legend-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 1.25rem; }
     .leg { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #666; }
     .leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
     .tl-wrap { margin-bottom: 1.25rem; }
     .tl-label-row { display: flex; justify-content: space-between; font-size: 10px; color: #999; margin-bottom: 4px; }
     .tl-outer { position: relative; height: 60px; }
@@ -70,6 +132,7 @@
     .tl-correct-tick { position: absolute; top: 12px; width: 2px; height: 24px; transform: translateX(-50%); }
     .tl-student-dot { position: absolute; top: 14px; width: 14px; height: 14px; border-radius: 50%; transform: translateX(-50%); border: 2px solid #fff; }
     .tl-seg-label { position: absolute; top: 34px; font-size: 9px; color: #999; transform: translateX(-50%); white-space: nowrap; }
+
     .section-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.25rem; }
     .s-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; border: 1px solid #e5e5e5; font-size: 13px; flex-wrap: wrap; }
     .s-item.hit        { border-color: #0F6E56; background: #E1F5EE; }
@@ -82,6 +145,7 @@
     .s-bonus-badge { font-size: 10px; padding: 2px 7px; border-radius: 20px; background: #EEEDFE; color: #534AB7; border: 1px solid #AFA9EC; flex-shrink: 0; }
     .s-time   { font-size: 11px; color: #999; flex-shrink: 0; }
     .s-result { font-size: 11px; color: #555; flex-shrink: 0; text-align: right; }
+
     .takeaway { border-left: 3px solid #1D9E75; padding: 12px 16px; background: #f7f7f5; border-radius: 0 8px 8px 0; font-size: 13px; color: #555; line-height: 1.6; }
     .takeaway strong { color: #1a1a1a; font-weight: 600; }
     .takeaway p { margin-bottom: 8px; }
@@ -91,34 +155,33 @@
 </head>
 <body>
 
-  <h1 class="sr-only">Bohemian Rhapsody Form Identifier — a no-stakes listening activity to test your ear for musical sections.</h1>
+  <h1 class="sr-only">Bohemian Rhapsody Form Identifier — a no-stakes listening activity.</h1>
 
-  <div class="yt-hidden" id="yt-container">
-    <div id="yt-player"></div>
-  </div>
-
-  <div class="player-card">
+  <div class="song-header">
     <div class="thumb">
-      <img src="https://img.youtube.com/vi/fJ9rUzIMcZQ/0.jpg" alt="Bohemian Rhapsody by Queen album thumbnail">
+      <img src="https://img.youtube.com/vi/fJ9rUzIMcZQ/0.jpg" alt="Bohemian Rhapsody by Queen">
     </div>
     <div class="song-info">
-      <div class="song-title">Bohemian Rhapsody</div>
-      <div class="song-artist">Queen &middot; 1975</div>
-      <div class="progress-wrap">
-        <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-fill"></div></div>
-        <div class="progress-times"><span id="prog-current">0:00</span><span>5:55</span></div>
-      </div>
+      <div class="song-title">Bohemian Rhapsody — Form Identifier</div>
+      <div class="song-artist">Queen &middot; 1975 &middot; No-stakes listening activity</div>
     </div>
-    <button class="play-btn" id="play-btn" onclick="togglePlay()" aria-label="Play Bohemian Rhapsody" disabled>
-      <i class="ti ti-player-play" aria-hidden="true"></i>
+  </div>
+
+  <div class="instructions-box">
+    <strong>What to do:</strong> Press play on the video above. The moment you click play, click the sync button below — that locks your timer to the music. Then click the big button every time you feel the music shift into a noticeably different section. Go with your gut. When the song ends, click "Show my results."
+  </div>
+
+  <div class="sync-row">
+    <div class="sync-label">
+      <strong>Step 1 — Sync your timer</strong>
+      Press play on the video above, then immediately click this button.
+    </div>
+    <button id="sync-btn" onclick="startSync()">
+      <i class="ti ti-player-play" aria-hidden="true"></i> I pressed play
     </button>
   </div>
 
-  <div class="loading-note" id="loading-note">Loading audio player — just a moment...</div>
-
-  <div class="instructions-box">
-    <strong>What to do:</strong> Press play above. Each time you feel the music shift into a noticeably different section, click the big button below. Go with your gut — there are no trick questions. When the song ends, click "Show my results."
-  </div>
+  <div class="timer" id="timer">0:00</div>
 
   <button id="click-btn" onclick="recordClick()" disabled>
     <i class="ti ti-music" aria-hidden="true"></i>
@@ -134,17 +197,19 @@
     <button class="btn-show" onclick="showResults()">Show my results</button>
   </div>
 
-  <div class="status" id="status"></div>
+  <div class="status" id="status">Press play on the video above, then click "I pressed play" to sync your timer.</div>
 
   <div class="results" id="results">
     <div class="result-headline" id="headline"></div>
     <div class="result-sub" id="result-sub"></div>
+
     <div class="score-grid">
       <div class="score-card"><div class="score-n green"  id="sc-hit">—</div><div class="score-lbl">Caught</div></div>
       <div class="score-card"><div class="score-n amber"  id="sc-close">—</div><div class="score-lbl">Close</div></div>
       <div class="score-card"><div class="score-n red"    id="sc-miss">—</div><div class="score-lbl">Missed</div></div>
       <div class="score-card"><div class="score-n purple" id="sc-bonus">—</div><div class="score-lbl">Bonus catch</div></div>
     </div>
+
     <div class="legend-row">
       <div class="leg"><div class="leg-dot" style="background:#1D9E75"></div> Caught (within 6s)</div>
       <div class="leg"><div class="leg-dot" style="background:#EF9F27"></div> Close (within 10s)</div>
@@ -152,6 +217,7 @@
       <div class="leg"><div class="leg-dot" style="background:#7F77DD"></div> Bonus section</div>
       <div class="leg"><div class="leg-dot" style="background:#aaa"></div> Your clicks</div>
     </div>
+
     <div class="tl-wrap">
       <div class="tl-label-row">
         <span>0:00</span><span>1:00</span><span>2:00</span>
@@ -159,8 +225,10 @@
       </div>
       <div class="tl-outer" id="timeline"><div class="tl-track"></div></div>
     </div>
+
     <div class="section-list" id="section-list"></div>
     <div class="takeaway" id="takeaway"></div>
+
     <div class="try-again">
       <button class="btn-ghost" onclick="resetAll()">
         <i class="ti ti-refresh" aria-hidden="true"></i> Try it again
@@ -171,7 +239,6 @@
   <script>
     const DURATION = 355;
     const HIT = 6, CLOSE = 10;
-    const VIDEO_ID = 'fJ9rUzIMcZQ';
 
     const SECTIONS = [
       { name: 'Introduction', time: 0,   color: '#B5D4F4', bonus: false },
@@ -192,75 +259,40 @@
     const SCORED = SECTIONS.filter(s => !s.bonus && s.time > 0);
     const BONUS  = SECTIONS.filter(s => s.bonus);
 
-    let clicks = [], isPlaying = false, startTime = 0, elapsed = 0;
-    let progressInterval = null, player = null, playerReady = false;
+    let clicks = [], synced = false, startTime = 0, timerInterval = null;
 
     function fmt(s) {
       s = Math.max(0, Math.round(s));
       return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
     }
 
-    function initYT() {
-      if (typeof YT === 'undefined' || !YT.Player) { setTimeout(initYT, 300); return; }
-      player = new YT.Player('yt-player', {
-        height: '1', width: '1',
-        videoId: VIDEO_ID,
-        playerVars: { autoplay: 0, controls: 0, rel: 0, modestbranding: 1 },
-        events: {
-          onReady: () => {
-            playerReady = true;
-            document.getElementById('play-btn').disabled = false;
-            document.getElementById('loading-note').textContent = 'Ready — press play to begin.';
-          },
-          onStateChange: e => {
-            if (e.data === YT.PlayerState.PLAYING) { onPlay(); }
-            if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) { onPause(); }
-          }
-        }
-      });
-    }
+    function startSync() {
+      synced = true;
+      startTime = Date.now();
+      clicks = [];
+      document.getElementById('click-feed').innerHTML = '';
+      document.getElementById('results').classList.remove('show');
+      document.getElementById('section-list').innerHTML = '';
 
-    function onPlay() {
-      isPlaying = true;
+      const btn = document.getElementById('sync-btn');
+      btn.classList.add('synced');
+      btn.innerHTML = '<i class="ti ti-check" aria-hidden="true"></i> Synced!';
+      btn.disabled = true;
+
       document.getElementById('click-btn').disabled = false;
-      document.getElementById('loading-note').textContent = '';
-      const btn = document.getElementById('play-btn');
-      btn.classList.add('playing');
-      btn.innerHTML = '<i class="ti ti-player-pause" aria-hidden="true"></i>';
-      btn.setAttribute('aria-label', 'Pause');
-      document.getElementById('status').textContent = 'Listening — click the button each time you hear a new section!';
-      startTime = Date.now() - (elapsed * 1000);
-      clearInterval(progressInterval);
-      progressInterval = setInterval(updateProgress, 500);
-    }
+      document.getElementById('status').textContent = 'Timer running — click the button each time you hear a new section!';
 
-    function onPause() {
-      isPlaying = false;
-      elapsed = (Date.now() - startTime) / 1000;
-      clearInterval(progressInterval);
-      const btn = document.getElementById('play-btn');
-      btn.classList.remove('playing');
-      btn.innerHTML = '<i class="ti ti-player-play" aria-hidden="true"></i>';
-      btn.setAttribute('aria-label', 'Play');
-      document.getElementById('status').textContent = elapsed < DURATION
-        ? 'Paused — press play to continue.'
-        : 'Song ended — click "Show my results" when you\'re ready.';
-    }
-
-    function updateProgress() {
-      const now = (Date.now() - startTime) / 1000;
-      const pct = Math.min((now / DURATION) * 100, 100);
-      document.getElementById('prog-fill').style.width = pct + '%';
-      document.getElementById('prog-current').textContent = fmt(now);
-    }
-
-    function togglePlay() {
-      if (!playerReady) return;
-      isPlaying ? player.pauseVideo() : player.playVideo();
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        const elapsed = (Date.now() - startTime) / 1000;
+        document.getElementById('timer').textContent = fmt(elapsed);
+        document.getElementById('timer').className = 'timer running';
+        if (elapsed >= DURATION + 5) clearInterval(timerInterval);
+      }, 250);
     }
 
     function recordClick() {
-      if (!isPlaying) return;
+      if (!synced) return;
       const t = (Date.now() - startTime) / 1000;
       clicks.push(t);
       const btn = document.getElementById('click-btn');
@@ -275,9 +307,11 @@
     }
 
     function showResults() {
-      if (clicks.length === 0) { document.getElementById('status').textContent = 'Press play and make some clicks first!'; return; }
-      if (playerReady) player.pauseVideo();
-      clearInterval(progressInterval);
+      if (!synced || clicks.length === 0) {
+        document.getElementById('status').textContent = 'Sync the timer and make some clicks first!';
+        return;
+      }
+      clearInterval(timerInterval);
 
       const matched = new Set();
       function bestClick(targetTime) {
@@ -321,7 +355,7 @@
       if (score >= total * 0.85)     { headline = 'Excellent ear!';      sub = 'You caught most of the major section changes. Trained listeners notice these transitions naturally — and now you\'re one of them.'; }
       else if (score >= total * 0.5) { headline = 'Good listening!';     sub = 'You caught some sections clearly. The ones you missed are worth a second listen — knowing where to listen makes all the difference.'; }
       else if (score >= 1)           { headline = 'Nice start!';         sub = 'The more you listen, the more you hear. Try it again now that you know where the sections are — you\'ll be surprised how obvious they sound the second time.'; }
-      else                           { headline = 'Give it another go!'; sub = 'No worries — this song takes careful listening. Check the section map below, then try again.'; }
+      else                           { headline = 'Give it another go!'; sub = 'No worries — this song takes careful listening. Check the section map below, then try again. Second attempts are almost always dramatically better.'; }
       if (bonus > 0) sub += ' And great ear catching that subtle instrumental section — most listeners miss it entirely.';
 
       document.getElementById('headline').textContent = headline;
@@ -395,27 +429,20 @@
     }
 
     function resetAll() {
-      clicks = []; isPlaying = false; elapsed = 0;
-      clearInterval(progressInterval);
-      if (playerReady) player.stopVideo();
-      document.getElementById('prog-fill').style.width = '0%';
-      document.getElementById('prog-current').textContent = '0:00';
+      synced = false; clicks = [];
+      clearInterval(timerInterval);
+      document.getElementById('timer').textContent = '0:00';
+      document.getElementById('timer').className = 'timer';
       document.getElementById('click-feed').innerHTML = '';
-      document.getElementById('status').textContent = '';
-      document.getElementById('loading-note').textContent = 'Ready — press play to begin.';
+      document.getElementById('status').textContent = 'Press play on the video above, then click "I pressed play" to sync your timer.';
       document.getElementById('results').classList.remove('show');
       document.getElementById('section-list').innerHTML = '';
-      const btn = document.getElementById('play-btn');
-      btn.classList.remove('playing');
-      btn.innerHTML = '<i class="ti ti-player-play" aria-hidden="true"></i>';
-      btn.setAttribute('aria-label', 'Play Bohemian Rhapsody');
+      const btn = document.getElementById('sync-btn');
+      btn.classList.remove('synced');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ti ti-player-play" aria-hidden="true"></i> I pressed play';
       document.getElementById('click-btn').disabled = true;
     }
-
-    window.onYouTubeIframeAPIReady = initYT;
-    const ytTag = document.createElement('script');
-    ytTag.src = 'https://www.youtube.com/iframe_api';
-    document.head.appendChild(ytTag);
   </script>
 
 </body>
